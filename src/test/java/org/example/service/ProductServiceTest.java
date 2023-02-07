@@ -1,16 +1,19 @@
 package org.example.service;
 
-import junit.framework.TestCase;
 import org.example.model.Category;
 import org.example.model.Product;
 import org.junit.Test;
 
 import java.util.*;
 
-import static org.mockito.Mockito.verify;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import org.hamcrest.collection.IsEmptyCollection;
+
+import static org.hamcrest.CoreMatchers.*;
 
 public class ProductServiceTest {
-    private List<Product> products = new ArrayList<>();
+    private final List<Product> products = new ArrayList<>();
 
     public Product init() {
         products.clear();
@@ -32,19 +35,17 @@ public class ProductServiceTest {
                 .keyWords(new HashSet<>(Arrays.asList("h_other", "h_some", "h_common")))
                 .build();
 
-        Product fork = Product.builder()
+        return Product.builder()
                 .category(home)
                 .build();
-
-       return fork;
     }
 
     @Test
     public void givenAValidCategoryShouldReturnKeyWordList() {
         products.add(init());
         ProductService service = new ProductService();
-        List<String>kw =  service.getKeyWord("home", products);
+        List<String> kw = service.getKeyWord("home", products);
 
-        verify(kw);
+        assertThat(kw, not(IsEmptyCollection.empty()));
     }
 }
